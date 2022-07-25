@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "grpc-echo/cmd"
+import "github.com/dariuszSki/grpc-echo/cmd"
 
 func main() {
 	cmd.Execute()
