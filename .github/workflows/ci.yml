@@ -50,4 +50,4 @@ jobs:
           context: .
           file: ./Dockerfile.multistage
           push: true
-          tags: grpc-echo:${{ steps.version.outputs.version }}
+          tags: grpc-echo:latest
