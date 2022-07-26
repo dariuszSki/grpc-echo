@@ -49,6 +49,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.multistage
-          platform: ${{ matrix.goarch }}
+          platforms: ${{ matrix.goarch }}
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest,${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:"${{ steps.version.outputs.version }}
