@@ -33,4 +33,4 @@ jobs:
           context: .
           file: ./Dockerfile.multistage
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.repository }}:latest
+          tags: ${{ github.repository }}:latest
