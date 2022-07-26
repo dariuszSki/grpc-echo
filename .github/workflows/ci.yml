@@ -2,48 +2,38 @@ name: Run CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ * ]
   workflow_dispatch:
-
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: Linux x86_64
+            arch: x86_64
+          - os: ubuntu-latest
+            name: Linux arm64
+            arch: arm64
     steps:
-      - name: Install Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.16.4
-
-      - name: Checkout code
+      -
+        name: Checkout
         uses: actions/checkout@v2
-
-      - name: Fetch required Go modules
-        run:  go mod download
-
-      - name: Build
-        run:  go build -v ./...
-
-      - name: Set up Docker Buildx
-        id:   buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Cache Docker layers
-        uses: actions/cache@v2
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v1
         with:
-          path: /tmp/.buildx-cache
-          key:  ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
-      - name: Build Docker image
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Build and push
         uses: docker/build-push-action@v2
         with:
-          builder: ${{ steps.buildx.outputs.name }}
-          push:    false
-          load:    true
-          tags: ${{ github.event.repository.name }}:latest, ${{ github.repository }}:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to:   type=local,dest=/tmp/.buildx-cache
-
-      - name: Run functional tests
-        run:  go test -v ./...
+          context: .
+          file: ./Dockerfile.multistage
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.repository }}:latest
