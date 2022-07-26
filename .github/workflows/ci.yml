@@ -3,7 +3,7 @@ name: ci
 on: [push]
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.goos }}
     strategy:
       matrix:
         include:
