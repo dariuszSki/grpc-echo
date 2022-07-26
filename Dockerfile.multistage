@@ -5,13 +5,10 @@
 ##
 
 FROM golang:1.18-buster AS build
-
 WORKDIR /app
-
 COPY . /app
-
+RUN go env -w GO111MODULE=off
 RUN go mod download
-
 RUN go build -o /grpc-echo
 
 ##
@@ -19,11 +16,7 @@ RUN go build -o /grpc-echo
 ##
 
 FROM gcr.io/distroless/base-debian10
-
 WORKDIR /
-
 COPY --from=build /grpc-echo /grpc-echo
-
 USER nonroot:nonroot
-
 ENTRYPOINT ["/grpc-echo"]
