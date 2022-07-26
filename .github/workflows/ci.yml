@@ -1,9 +1,5 @@
-name: Run CI
-
-on:
-  push:
-    branches: [ * ]
-  workflow_dispatch:
+name: ci
+on: [push]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
