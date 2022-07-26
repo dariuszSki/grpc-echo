@@ -50,4 +50,4 @@ jobs:
           context: .
           file: ./Dockerfile.multistage
           push: true
-          tags: grpc-echo:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest
