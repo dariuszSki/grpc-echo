@@ -22,13 +22,14 @@ jobs:
         run: ls -R
         working-directory: ${{ github.workspace }}/
       -
-        name: Set up Go
+        name: set up go
         uses: actions/setup-go@v3
         with:
           go-version: 1.18
       -
-        name: Build
-        run: go build -v
+        name: build
+        run: |
+          go build -v
       -
         name: version
         run: echo "::set-output name=version::$(./grpc-echo version)"
@@ -49,4 +50,4 @@ jobs:
           context: .
           file: ./Dockerfile.multistage
           push: true
-          tags: ${{ github.repository }}:latest
+          tags: grpc-echo:${{ steps.version.outputs.version }}
