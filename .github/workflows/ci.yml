@@ -58,5 +58,4 @@ jobs:
           file: ./Dockerfile.multistage
           platforms: "${{ matrix.os }}/${{ matrix.arch }}"
           push: true
-          labels: ${{ steps.docker_build.output.digest }}
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest,${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:${{ steps.version.outputs.version }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest,${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:${{ steps.version.outputs.version }},${{ steps.docker_build.output.digest }}
