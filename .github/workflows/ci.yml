@@ -4,15 +4,22 @@ name: ci
 on: [push]
 jobs:
   build:
-    runs-on: ${{ matrix.os}}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - distro: ubuntu-latest
             arch: x86_64
           - os: ubuntu-latest
-            arch: aarch64
+            distro: arm64
     steps:
+
+      -
+        name: Build docker images
+        uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
       -
         name: checkout workspace
         uses: actions/checkout@v3
