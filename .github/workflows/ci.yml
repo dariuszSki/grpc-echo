@@ -56,5 +56,6 @@ jobs:
           context: ./
           file: ./Dockerfile.multistage
           platforms: "${{ matrix.os }}/${{ matrix.arch }}"
+          builder: ${{ steps.buildx.output.digest }}
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest,${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:${{ steps.version.outputs.version }}
