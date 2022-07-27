@@ -51,11 +51,12 @@ jobs:
         uses: docker/setup-buildx-action@v2
       -
         name: Build and push
+        id: docker_build
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./Dockerfile.multistage
           platforms: "${{ matrix.os }}/${{ matrix.arch }}"
           push: true
-          labels: ${{ output.digest }}
+          labels: ${{ steps.docker_build.output.digest }}
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest,${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:${{ steps.version.outputs.version }}
