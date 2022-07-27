@@ -4,13 +4,13 @@ name: ci
 on: [push]
 jobs:
   build:
-    runs-on: ${{ matrix.os}}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: linux
             arch: amd64
-          - os: ubuntu-latest
+          - os: linux
             arch: arm64
     steps:
       -
