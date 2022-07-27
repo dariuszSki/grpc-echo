@@ -4,7 +4,7 @@ name: ci
 on: [push]
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.arch }}
     strategy:
       matrix:
         include:
