@@ -4,14 +4,14 @@ name: ci
 on: [push]
 jobs:
   build:
-    runs-on: ${{ matrix.goos }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-          - goos: ubuntu-latest
-            goarch: x86_64
-          - goos: ubuntu-latest
-            goarch: arm64
+          - os: ubuntu-latest
+            arch: x86_64
+          - os: ubuntu-latest
+            arch: arm64
     steps:
       -
         name: checkout workspace
@@ -50,6 +50,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.multistage
-          platforms: ${{ matrix.goarch }}
+          platforms: ${{ matrix.arch }}
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest,${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:${{ steps.version.outputs.version }}
