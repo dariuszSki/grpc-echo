@@ -4,13 +4,13 @@ name: ci
 on: [push]
 jobs:
   build:
-    runs-on: ${{ matrix.distro}}
+    runs-on: ${{ matrix.os}}
     strategy:
       matrix:
         include:
-          - distro: ubuntu-latest
-            arch: x86_64
-          - distro: ubuntu-latest
+          - os: ubuntu-latest
+            arch: amd64
+          - os: ubuntu-latest
             arch: arm64
     steps:
       -
@@ -45,7 +45,7 @@ jobs:
         name: Setup QEMU
         uses: docker/setup-qemu-action@v2
         with:
-          platforms: "${{ matrix.distro }}/${{ matrix.arch }}"
+          platforms: "${{ matrix.os }}/${{ matrix.arch }}"
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -55,6 +55,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.multistage
-          platforms: "${{ matrix.distro }}/${{ matrix.arch }}"
+          platforms: "${{ matrix.os }}/${{ matrix.arch }}"
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:latest,${{ secrets.DOCKER_HUB_USERNAME }}/grpc-echo:${{ steps.version.outputs.version }}
