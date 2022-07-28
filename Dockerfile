@@ -14,7 +14,7 @@ RUN go build -o /grpc-echo
 ##
 
 FROM gcr.io/distroless/base-debian10
-WORKDIR /
+WORKDIR /app
 COPY --from=build /grpc-echo /grpc-echo
 USER nonroot:nonroot
 ENTRYPOINT ["/grpc-echo"]
