@@ -19,25 +19,23 @@ limitations under the License.
 import (
 	"flag"
 	"fmt"
-	"google.golang.org/grpc"
 	"os"
+
+	"google.golang.org/grpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var (
-	conn              *grpc.ClientConn
-	cfgFile           = flag.String("cIdentity", "", "Ziti Client Identity file")
-	sIdentity         = flag.String("sIdentity", "", "Optional Ziti Server Identity if you require a specific destination")
-	service           = flag.String("service", "", "Ziti Service")
-	addressByIdentity = flag.Bool("addressByIdentity", false, "Enable addressable identity")
+	conn    *grpc.ClientConn
+	cfgFile = flag.String("cIdentity", "", "Ziti Client Identity file")
 	// rootCmd represents the base command when called without any subcommands
 	rootCmd = &cobra.Command{
 		Use:   "grpc-echo",
 		Short: "grpc-echo: echo message app",
 		Long: `It is an application that a client can test a network using a message and get a response back from a server;
-i.e. client ==message==>server==message==>client.`,
+i.e. client==message==>server==message==>client.`,
 	}
 )
 
@@ -53,7 +51,6 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(cfgFile, "config", "", "identity config file (default is $HOME/.netfoundry/identities/.identity.json)")
-	rootCmd.PersistentFlags().StringVar(service, "service", "", "Ziti Service")
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -18,16 +18,16 @@ limitations under the License.
 
 import (
 	"context"
-	"flag"
+	"log"
+	"net"
+	"time"
+
 	"github.com/openziti/sdk-golang/ziti"
 	"github.com/openziti/sdk-golang/ziti/config"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"
-	"log"
-	"net"
-	"time"
 )
 
 const (
@@ -35,7 +35,7 @@ const (
 )
 
 var (
-	clientEchoString = flag.String("clientEchoString", defaultClientEchoName, "Name to greet")
+	service, sIdentity, clientEchoString string
 	// clientCmd represents the client command
 	clientCmd = &cobra.Command{
 		Use:   "client",
@@ -49,8 +49,9 @@ var (
 
 func init() {
 	rootCmd.AddCommand(clientCmd)
-	clientCmd.Flags().StringVar(clientEchoString, "clientEchoString", defaultClientEchoName, "Name to greet")
-	clientCmd.Flags().StringVar(sIdentity, "sIdentity", "", "Optional Ziti Server Identity if you require a specific destination")
+	clientCmd.Flags().StringVar(&service, "service", "", "Ziti Service")
+	clientCmd.Flags().StringVar(&clientEchoString, "clientEchoString", defaultClientEchoName, "Name to greet")
+	clientCmd.Flags().StringVar(&sIdentity, "sIdentity", "", "Optional Ziti Server Identity if you require a specific destination")
 }
 
 func client() {
@@ -66,14 +67,14 @@ func client() {
 		log.Fatalf("failed to authenticate: %v", err)
 	}
 
-	if *sIdentity != "" {
+	if sIdentity != "" {
 		// set up ziti server identity to dial
 		dialOptions := &ziti.DialOptions{
-			Identity:       *sIdentity,
+			Identity:       sIdentity,
 			ConnectTimeout: 1 * time.Minute,
 		}
 		// Set up a connection to the server.
-		conn, err = grpc.Dial(*service,
+		conn, err = grpc.Dial(service,
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
 			grpc.WithContextDialer(func(ctx context.Context, s string) (net.Conn, error) {
 				return ztx.DialWithOptions(s, dialOptions)
@@ -81,7 +82,7 @@ func client() {
 		)
 	} else {
 		// Set up a connection to the server.
-		conn, err = grpc.Dial(*service,
+		conn, err = grpc.Dial(service,
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
 			grpc.WithContextDialer(func(ctx context.Context, s string) (net.Conn, error) {
 				return ztx.Dial(s)
@@ -103,7 +104,7 @@ func client() {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *clientEchoString})
+	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: clientEchoString})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
